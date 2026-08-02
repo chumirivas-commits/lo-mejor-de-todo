@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12000c">
+  <title>Lo Mejor de Todo</title>
+
+  <!-- Mantiene la integración con la Mini App de Telegram -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    :root{
+      --fondo:#0d0009;
+      --panel:#1c0716;
+      --panel2:#290c20;
+      --rosado:#ff2f92;
+      --rosado2:#ff6db9;
+      --texto:#ffffff;
+      --suave:#d9b7cc;
+      --borde:rgba(255,255,255,.13);
+      --sombra:0 18px 45px rgba(0,0,0,.38);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Arial,Helvetica,sans-serif;
+      color:var(--texto);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,47,146,.22),transparent 32%),
+        linear-gradient(180deg,#210017 0%,#0d0009 55%,#070004 100%);
+    }
+
+    img,video{display:block;max-width:100%}
+    button,a{font:inherit}
+    button{cursor:pointer}
+    .oculto{display:none!important}
+
+    .app{
+      width:min(100%,760px);
+      margin:0 auto;
+      min-height:100vh;
+      padding-bottom:36px;
+    }
+
+    .encabezado{padding:14px 14px 5px}
+
+    .encabezado img{
+      width:100%;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      border-radius:26px;
+      border:2px solid #fff;
+      background:#000;
+      box-shadow:var(--sombra);
+    }
+
+    .presentacion{
+      text-align:center;
+      padding:18px 18px 8px;
+    }
+
+    .presentacion h1{
+      margin:0;
+      font-size:clamp(27px,7vw,40px);
+    }
+
+    .presentacion p{
+      max-width:580px;
+      margin:8px auto 0;
+      color:var(--suave);
+      font-size:14px;
+      line-height:1.45;
+    }
+
+    .tarjetas{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      padding:14px;
+    }
+
+    .tarjeta{
+      min-width:0;
+      overflow:hidden;
+      padding:14px;
+      text-align:center;
+      border-radius:22px;
+      border:1px solid var(--borde);
+      background:linear-gradient(180deg,var(--panel2),var(--panel));
+      box-shadow:0 12px 30px rgba(0,0,0,.26);
+    }
+
+    .abrir-perfil{
+      all:unset;
+      display:block;
+      width:100%;
+      cursor:pointer;
+    }
+
+    .foto-perfil{
+      width:98px;
+      height:98px;
+      margin:0 auto 11px;
+      border-radius:50%;
+      object-fit:cover;
+      border:3px solid var(--rosado);
+      background:#311226;
+      box-shadow:0 0 0 5px rgba(255,47,146,.14);
+    }
+
+    .tarjeta h2{
+      margin:7px 0 5px;
+      font-size:18px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .tarjeta p{
+      min-height:34px;
+      margin:0 0 12px;
+      color:var(--suave);
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .boton-principal,
+    .boton-secundario,
+    .boton-volver{
+      min-height:44px;
+      padding:11px 14px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      width:100%;
+    }
+
+    .boton-principal{
+      border:0;
+      color:#fff;
+      background:linear-gradient(135deg,#ff147f,#ff52ae);
+      box-shadow:0 9px 22px rgba(255,47,146,.25);
+    }
+
+    .boton-secundario{
+      color:#fff;
+      background:#352033;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .boton-volver{
+      width:auto;
+      min-height:40px;
+      color:#fff;
+      background:rgba(255,255,255,.09);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .barra-perfil{
+      position:sticky;
+      top:0;
+      z-index:10;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--borde);
+      background:rgba(13,0,9,.9);
+      backdrop-filter:blur(14px);
+    }
+
+    .barra-perfil strong{
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+      font-size:18px;
+    }
+
+    .cabecera-perfil{
+      padding:24px 18px 18px;
+      text-align:center;
+    }
+
+    .cabecera-perfil .foto-perfil{
+      width:134px;
+      height:134px;
+      margin-bottom:15px;
+    }
+
+    .cabecera-perfil h1{
+      margin:0 0 8px;
+      font-size:30px;
+    }
+
+    .cabecera-perfil p{
+      max-width:580px;
+      margin:0 auto;
+      color:var(--suave);
+      line-height:1.5;
+    }
+
+    .acciones-perfil{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      padding:0 14px 18px;
+    }
+
+    .titulo-galeria{
+      margin:0;
+      padding:0 15px 10px;
+      font-size:18px;
+    }
+
+    .galeria{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:3px;
+      padding:0 3px;
+    }
+
+    .publicacion{
+      position:relative;
+      aspect-ratio:1/1;
+      padding:0;
+      overflow:hidden;
+      border:0;
+      background:#29101f;
+    }
+
+    .publicacion img,
+    .publicacion video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .marca-video{
+      position:absolute;
+      top:7px;
+      right:7px;
+      width:28px;
+      height:28px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      color:#fff;
+      background:rgba(0,0,0,.65);
+      font-size:13px;
+    }
+
+    .sin-publicaciones{
+      grid-column:1/-1;
+      padding:35px 20px;
+      text-align:center;
+      color:var(--suave);
+    }
+
+    .visor{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:flex;
+      flex-direction:column;
+      background:rgba(0,0,0,.97);
+    }
+
+    .visor-arriba{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:max(12px,env(safe-area-inset-top)) 12px 10px;
+    }
+
+    .boton-circular{
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      background:rgba(255,255,255,.1);
+      font-size:23px;
+    }
+
+    .visor-centro{
+      position:relative;
+      flex:1;
+      min-height:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      touch-action:pan-y;
+    }
+
+    .visor-centro img,
+    .visor-centro video{
+      max-width:100%;
+      max-height:100%;
+      object-fit:contain;
+    }
+
+    .flecha{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;
+      height:56px;
+      border:0;
+      border-radius:12px;
+      color:#fff;
+      background:rgba(0,0,0,.42);
+      font-size:30px;
+    }
+
+    .flecha.anterior{left:8px}
+    .flecha.siguiente{right:8px}
+
+    .visor-abajo{
+      display:grid;
+      grid-template-columns:52px 1fr 52px;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px max(16px,env(safe-area-inset-bottom));
+      background:rgba(0,0,0,.72);
+      border-top:1px solid rgba(255,255,255,.10);
+    }
+
+    .corazon,
+    .comentar{
+      width:48px;
+      height:48px;
+      padding:0;
+      border:0;
+      border-radius:50%;
+      color:#fff;
+      background:rgba(255,255,255,.10);
+      font-size:30px;
+      display:grid;
+      place-items:center;
+    }
+
+    .comentar{
+      font-size:25px;
+      text-decoration:none;
+    }
+
+    .corazon.activo{color:#ff2d72}
+
+    .indicacion-deslizar{
+      text-align:center;
+      min-width:0;
+    }
+
+    .indicacion-deslizar strong{
+      display:block;
+      color:#fff;
+      font-size:15px;
+    }
+
+    .contador{
+      display:block;
+      margin-top:3px;
+      color:#cfcfcf;
+      font-size:13px;
+    }
+
+    .mayores{
+      position:fixed;
+      inset:0;
+      z-index:300;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:
+        radial-gradient(circle at center,rgba(255,47,146,.28),transparent 42%),
+        rgba(6,0,4,.98);
+    }
+
+    .caja-mayores{
+      width:min(100%,430px);
+      padding:28px 22px;
+      text-align:center;
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.15);
+      background:linear-gradient(180deg,#2a1021,#14000e);
+      box-shadow:var(--sombra);
+    }
+
+    .icono-mayores{font-size:52px;margin-bottom:8px}
+    .caja-mayores h1{margin:0 0 10px;font-size:32px}
+    .caja-mayores p{margin:0 0 20px;color:var(--suave);line-height:1.5}
+
+    @media (min-width:650px){
+      .tarjetas{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
+    @media (max-width:380px){
+      .tarjetas{gap:9px;padding:9px}
+      .tarjeta{padding:10px}
+      .foto-perfil{width:84px;height:84px}
+      .tarjeta h2{font-size:16px}
+      .acciones-perfil{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Pantalla de confirmación +18 -->
+  <section id="pantallaMayores" class="mayores">
+    <div class="caja-mayores">
+      <div class="icono-mayores">🔞</div>
+      <h1>Contenido +18</h1>
+      <p>Esta página es únicamente para personas mayores de 18 años.</p>
+      <button id="botonEntrar" class="boton-principal" type="button">
+        Soy mayor de 18 años
+      </button>
+    </div>
+  </section>
+
+  <main class="app">
+    <!-- INICIO -->
+    <section id="vistaInicio">
+      <header class="encabezado">
+        <img src="logo-lo-mejor-de-todo.jpeg" alt="Lo Mejor de Todo">
+      </header>
+
+      <div class="presentacion">
+        <h1>Lo Mejor de Todo</h1>
+        <p>Perfiles exclusivos, contenido real y comunicación directa por Telegram.</p>
+      </div>
+
+      <section id="contenedorTarjetas" class="tarjetas"></section>
+    </section>
+
+    <!-- PERFIL COMPLETO -->
+    <section id="vistaPerfil" class="oculto">
+      <div class="barra-perfil">
+        <button id="botonVolver" class="boton-volver" type="button">← Volver</button>
+        <strong id="nombreBarra"></strong>
+      </div>
+
+      <div class="cabecera-perfil">
+        <img id="fotoPerfilGrande" class="foto-perfil" src="" alt="">
+        <h1 id="nombrePerfil"></h1>
+        <p id="biografiaPerfil"></p>
+      </div>
+
+      <div class="acciones-perfil">
+        <a id="botonComprar" class="boton-principal" href="#" target="_blank" rel="noopener">
+          💬 Comprar contenido
+        </a>
+
+        <a id="botonCanal" class="boton-secundario" href="#" target="_blank" rel="noopener">
+          📣 Ver canal
+        </a>
+      </div>
+
+      <h2 class="titulo-galeria">Publicaciones</h2>
+      <div id="galeria" class="galeria"></div>
+    </section>
+  </main>
+
+  <!-- VISOR DE FOTOS Y VIDEOS -->
+  <section id="visor" class="visor oculto" aria-modal="true">
+    <div class="visor-arriba">
+      <button id="cerrarVisor" class="boton-circular" type="button">×</button>
+      <span id="nombreVisor"></span>
+      <span style="width:45px"></span>
+    </div>
+
+    <div id="zonaVisor" class="visor-centro">
+      <button id="publicacionAnterior" class="flecha anterior" type="button">‹</button>
+      <div id="contenidoVisor"></div>
+      <button id="publicacionSiguiente" class="flecha siguiente" type="button">›</button>
+    </div>
+
+    <div class="visor-abajo">
+      <button id="botonCorazon" class="corazon" type="button" aria-label="Me gusta">♡</button>
+
+      <div class="indicacion-deslizar">
+        <strong>← Desliza →</strong>
+        <span id="contadorPublicacion" class="contador"></span>
+      </div>
+
+      <button id="botonComentar" class="comentar" type="button" aria-label="Comentar por Telegram">💬</button>
+    </div>
+  </section>
+
+  <script>
+    /*
+      ==========================================================
+      DATOS DE LAS CREADORAS
+      ==========================================================
+
+      username:
+      Se escribe SIN arroba.
+      Ejemplo: username: "valeriapremium"
+
+      channel:
+      Se coloca el enlace COMPLETO del canal.
+      Ejemplo: channel: "https://t.me/canaldevaleria"
+    */
+
+    const creadoras = [
+      {
+        id: 1,
+        name: "Valeria Castañeda",
+        username: "valeriapremium",
+
+        // CAMBIAR por el enlace verdadero del canal de Valeria:
+        channel: "https://t.me/valeriapremium",
+
+        image: "photo_2026-08-01 16.47.50.jpeg",
+        description: "Conoce su perfil y escríbele directamente.",
+        bio: "Contenido exclusivo y atención directa por Telegram.",
+
+        posts: [
+          { type: "image", src: "valeria00001.jpg" },
+          { type: "image", src: "valeria00002.jpg" },
+          { type: "image", src: "valeria00003.jpg" },
+          { type: "image", src: "valeria00004.jpg" },
+          { type: "image", src: "valeria00005.jpg" },
+          { type: "image", src: "valeria00006.jpg" },
+          { type: "image", src: "valeria00007.jpg" },
+          { type: "video", src: "valeria00022.mp4" },
+          { type: "image", src: "valeria00008.jpg" },
+          { type: "image", src: "valeria00009.jpg" },
+          { type: "image", src: "valeria00010.jpg" },
+          { type: "image", src: "valeria00011.jpg" },
+          { type: "image", src: "valeria00012.jpg" },
+          { type: "image", src: "valeria00013.jpg" },
+          { type: "image", src: "valeria00014.jpg" },
+          { type: "video", src: "valeria00023.mp4" },
+          { type: "image", src: "valeria00015.jpg" },
+          { type: "image", src: "valeria00016.jpg" },
+          { type: "image", src: "valeria00017.jpg" },
+          { type: "image", src: "valeria00018.jpg" },
+          { type: "image", src: "valeria00019.jpg" },
+          { type: "image", src: "valeria00020.jpg" },
+          { type: "image", src: "valeria00021.jpg" },
+          { type: "video", src: "valeria00024.mp4" }
+        ]
+      },
+
+      {
+        id: 2,
+        name: "La Gochita",
+        username: "lagochitahot1",
+
+        // CAMBIAR por el enlace verdadero del canal de La Gochita:
+        channel: "https://t.me/lagochitahot1",
+
+        image: "photo_2026-08-01 18.53.24.jpeg",
+        description: "Conoce su perfil y escríbele directamente.",
+        bio: "Aquí podrás conocer su contenido y comunicarte directamente.",
+
+        posts: [
+          { type: "image", src: "sahaaa00001.jpg" },
+          { type: "image", src: "sahaaa00002.jpg" },
+          { type: "image", src: "sahaaa00003.jpg" },
+          { type: "image", src: "sahaaa00004.jpg" },
+          { type: "image", src: "sahaaa00005.jpg" },
+          { type: "image", src: "sahaaa00006.jpg" },
+          { type: "image", src: "sahaaa00007.jpg" },
+          { type: "image", src: "sahaaa00008.jpg" },
+          { type: "image", src: "sahaaa00009.jpg" },
+          { type: "image", src: "sahaaa00010.jpg" },
+          { type: "image", src: "sahaaa00011.jpg" },
+          { type: "image", src: "sahaaa00012.jpg" },
+          { type: "image", src: "sahaaa00013.jpg" },
+          { type: "image", src: "sahaaa00014.jpg" },
+          { type: "image", src: "sahaaa00015.jpg" },
+          { type: "image", src: "sahaaa00016.jpg" },
+          { type: "image", src: "sahaaa00017.jpg" },
+          { type: "image", src: "sahaaa00018.jpg" }
+        ]
+      }
+    ];
+
+    const seleccionar = (selector) => document.querySelector(selector);
+
+    const pantallaMayores = seleccionar("#pantallaMayores");
+    const vistaInicio = seleccionar("#vistaInicio");
+    const vistaPerfil = seleccionar("#vistaPerfil");
+    const contenedorTarjetas = seleccionar("#contenedorTarjetas");
+    const galeria = seleccionar("#galeria");
+    const visor = seleccionar("#visor");
+    const contenidoVisor = seleccionar("#contenidoVisor");
+
+    let creadoraActiva = null;
+    let indicePublicacion = 0;
+    let inicioDeslizamientoX = 0;
+
+    function enlaceChat(username){
+      const usuarioLimpio = String(username || "").replace("@","").trim();
+      return usuarioLimpio ? `https://t.me/${usuarioLimpio}` : "#";
+    }
+
+    function abrirChatDirecto(username){
+      const usuarioLimpio = String(username || "").replace("@","").trim();
+      if(!usuarioLimpio) return;
+
+      const enlaceTelegram = `https://t.me/${usuarioLimpio}`;
+      const enlaceAplicacion = `tg://resolve?domain=${usuarioLimpio}`;
+
+      if(
+        window.Telegram &&
+        window.Telegram.WebApp &&
+        typeof window.Telegram.WebApp.openTelegramLink === "function"
+      ){
+        window.Telegram.WebApp.openTelegramLink(enlaceTelegram);
+      }else{
+        window.location.href = enlaceAplicacion;
+      }
+    }
+
+    function abrirCanal(url){
+      if(!url || url === "#") return;
+      window.open(url,"_blank","noopener");
+    }
+
+    function mostrarTarjetas(){
+      contenedorTarjetas.innerHTML = creadoras.map((creadora) => `
+        <article class="tarjeta">
+          <button class="abrir-perfil" type="button" data-perfil="${creadora.id}">
+            <img class="foto-perfil" src="${creadora.image}" alt="${creadora.name}">
+            <h2>${creadora.name}</h2>
+            <p>${creadora.description}</p>
+          </button>
+
+          <a
+            class="boton-principal enlace-chat"
+            href="${enlaceChat(creadora.username)}"
+            data-username="${creadora.username}"
+            target="_blank"
+            rel="noopener"
+          >
+            ✈️ Escribir por Telegram
+          </a>
+        </article>
+      `).join("");
+
+      document.querySelectorAll("[data-perfil]").forEach((boton) => {
+        boton.addEventListener("click", () => {
+          abrirPerfil(Number(boton.dataset.perfil));
+        });
+      });
+
+      document.querySelectorAll(".enlace-chat").forEach((enlace) => {
+        enlace.addEventListener("click", (evento) => {
+          evento.preventDefault();
+          abrirChatDirecto(enlace.dataset.username);
+        });
+      });
+    }
+
+    function abrirPerfil(id){
+      creadoraActiva = creadoras.find((creadora) => creadora.id === id);
+      if(!creadoraActiva) return;
+
+      seleccionar("#nombreBarra").textContent = creadoraActiva.name;
+      seleccionar("#nombrePerfil").textContent = creadoraActiva.name;
+      seleccionar("#biografiaPerfil").textContent = creadoraActiva.bio;
+      seleccionar("#fotoPerfilGrande").src = creadoraActiva.image;
+      seleccionar("#fotoPerfilGrande").alt = creadoraActiva.name;
+
+      const urlChat = enlaceChat(creadoraActiva.username);
+      const urlCanal = creadoraActiva.channel;
+
+      seleccionar("#botonComprar").href = urlChat;
+      seleccionar("#botonComprar").dataset.username = creadoraActiva.username;
+
+      seleccionar("#botonCanal").href = urlCanal;
+      seleccionar("#botonCanal").dataset.url = urlCanal;
+
+      mostrarGaleria();
+
+      vistaInicio.classList.add("oculto");
+      vistaPerfil.classList.remove("oculto");
+      window.scrollTo(0,0);
+    }
+
+    function cerrarPerfil(){
+      vistaPerfil.classList.add("oculto");
+      vistaInicio.classList.remove("oculto");
+      creadoraActiva = null;
+      window.scrollTo(0,0);
+    }
+
+    function mostrarGaleria(){
+      const publicaciones = creadoraActiva?.posts || [];
+
+      if(!publicaciones.length){
+        galeria.innerHTML = `
+          <div class="sin-publicaciones">
+            Próximamente habrá publicaciones.
+          </div>
+        `;
+        return;
+      }
+
+      galeria.innerHTML = publicaciones.map((publicacion, indice) => `
+        <button
+          class="publicacion"
+          type="button"
+          data-publicacion="${indice}"
+          aria-label="Abrir publicación ${indice + 1}"
+        >
+          ${
+            publicacion.type === "video"
+              ? `
+                <video src="${publicacion.src}" muted playsinline preload="metadata"></video>
+                <span class="marca-video">▶</span>
+              `
+              : `
+                <img
+                  src="${publicacion.src}"
+                  alt="Publicación ${indice + 1} de ${creadoraActiva.name}"
+                  loading="lazy"
+                >
+              `
+          }
+        </button>
+      `).join("");
+
+      galeria.querySelectorAll("[data-publicacion]").forEach((boton) => {
+        boton.addEventListener("click", () => {
+          abrirVisor(Number(boton.dataset.publicacion));
+        });
+      });
+    }
+
+    function abrirVisor(indice){
+      indicePublicacion = indice;
+      visor.classList.remove("oculto");
+      document.body.style.overflow = "hidden";
+      mostrarPublicacionActiva();
+    }
+
+    function cerrarVisor(){
+      visor.classList.add("oculto");
+      document.body.style.overflow = "";
+      contenidoVisor.innerHTML = "";
+    }
+
+    function mostrarPublicacionActiva(){
+      if(!creadoraActiva) return;
+
+      const publicaciones = creadoraActiva.posts;
+      const publicacion = publicaciones[indicePublicacion];
+
+      seleccionar("#nombreVisor").textContent = creadoraActiva.name;
+      seleccionar("#contadorPublicacion").textContent =
+        `${indicePublicacion + 1} de ${publicaciones.length}`;
+
+      if(publicacion.type === "video"){
+        contenidoVisor.innerHTML = `
+          <video
+            src="${publicacion.src}"
+            controls
+            autoplay
+            playsinline
+          ></video>
+        `;
+      }else{
+        contenidoVisor.innerHTML = `
+          <img
+            src="${publicacion.src}"
+            alt="Publicación de ${creadoraActiva.name}"
+          >
+        `;
+      }
+
+      const claveCorazon = `me-gusta-${creadoraActiva.id}-${indicePublicacion}`;
+      const marcado = localStorage.getItem(claveCorazon) === "1";
+
+      seleccionar("#botonCorazon").classList.toggle("activo",marcado);
+      seleccionar("#botonCorazon").textContent = marcado ? "♥" : "♡";
+    }
+
+    function cambiarPublicacion(direccion){
+      if(!creadoraActiva || !creadoraActiva.posts.length) return;
+
+      const total = creadoraActiva.posts.length;
+      indicePublicacion =
+        (indicePublicacion + direccion + total) % total;
+
+      mostrarPublicacionActiva();
+    }
+
+    seleccionar("#botonEntrar").addEventListener("click", () => {
+      localStorage.setItem("mayorDeEdadConfirmado","si");
+      pantallaMayores.classList.add("oculto");
+    });
+
+    seleccionar("#botonVolver").addEventListener("click",cerrarPerfil);
+    seleccionar("#cerrarVisor").addEventListener("click",cerrarVisor);
+    seleccionar("#publicacionAnterior").addEventListener("click",() => cambiarPublicacion(-1));
+    seleccionar("#publicacionSiguiente").addEventListener("click",() => cambiarPublicacion(1));
+
+    seleccionar("#botonComprar").addEventListener("click",(evento) => {
+      evento.preventDefault();
+      abrirChatDirecto(evento.currentTarget.dataset.username);
+    });
+
+    seleccionar("#botonCanal").addEventListener("click",(evento) => {
+      evento.preventDefault();
+      abrirCanal(evento.currentTarget.dataset.url);
+    });
+
+    seleccionar("#botonComentar").addEventListener("click",() => {
+      if(!creadoraActiva) return;
+      abrirChatDirecto(creadoraActiva.username);
+    });
+
+    seleccionar("#botonCorazon").addEventListener("click",() => {
+      if(!creadoraActiva) return;
+
+      const claveCorazon = `me-gusta-${creadoraActiva.id}-${indicePublicacion}`;
+      const marcado = localStorage.getItem(claveCorazon) === "1";
+
+      if(marcado){
+        localStorage.removeItem(claveCorazon);
+      }else{
+        localStorage.setItem(claveCorazon,"1");
+      }
+
+      mostrarPublicacionActiva();
+    });
+
+    seleccionar("#zonaVisor").addEventListener("touchstart",(evento) => {
+      inicioDeslizamientoX = evento.changedTouches[0].clientX;
+    },{passive:true});
+
+    seleccionar("#zonaVisor").addEventListener("touchend",(evento) => {
+      const diferencia =
+        evento.changedTouches[0].clientX - inicioDeslizamientoX;
+
+      if(Math.abs(diferencia) < 30) return;
+
+      if(diferencia < 0){
+        cambiarPublicacion(1);
+      }else{
+        cambiarPublicacion(-1);
+      }
+    },{passive:true});
+
+    document.addEventListener("keydown",(evento) => {
+      if(visor.classList.contains("oculto")) return;
+
+      if(evento.key === "Escape") cerrarVisor();
+      if(evento.key === "ArrowLeft") cambiarPublicacion(-1);
+      if(evento.key === "ArrowRight") cambiarPublicacion(1);
+    });
+
+    if(localStorage.getItem("mayorDeEdadConfirmado") === "si"){
+      pantallaMayores.classList.add("oculto");
+    }
+
+    if(window.Telegram && window.Telegram.WebApp){
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+
+    mostrarTarjetas();
+  </script>
+</body>
+</html>
