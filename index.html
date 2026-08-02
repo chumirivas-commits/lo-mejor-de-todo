@@ -1,258 +1,360 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1"
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#7a0019">
   <title>Lo Mejor de Todo</title>
-
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
-    * {
-      box-sizing: border-box;
+    :root{
+      --bg:#0f0f12;
+      --panel:#19191f;
+      --panel2:#23232b;
+      --text:#ffffff;
+      --muted:#b8b8c2;
+      --accent:#c5163a;
+      --accent2:#7a0019;
+      --line:#30303a;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,#160008 0,#0f0f12 260px);
+      color:var(--text);
+      min-height:100vh;
+    }
+    button,a{font:inherit}
+    button{cursor:pointer}
+    img,video{display:block;max-width:100%}
+    .hidden{display:none!important}
+
+    header{
+      padding:24px 16px 18px;
+      text-align:center;
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(15,15,18,.94);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .brand-mark{
+      width:54px;height:54px;border-radius:50%;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      font-size:28px;border:2px solid #ff6b86;
+    }
+    h1{margin:0;font-size:24px}
+    .subtitle{margin:6px 0 0;color:var(--muted);font-size:14px}
+
+    .toolbar{
+      max-width:1080px;
+      margin:18px auto 0;
+      padding:0 16px;
+    }
+    .search{
+      width:100%;
+      padding:13px 15px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:var(--panel);
+      color:var(--text);
+      font-size:16px;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, #5b123f 0%, #170713 45%, #080408 100%);
-      color: white;
-      min-height: 100vh;
+    .grid{
+      max-width:1080px;
+      margin:18px auto 40px;
+      padding:0 16px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:18px;
+    }
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 24px rgba(0,0,0,.2);
+    }
+    .profile-link{
+      width:100%;
+      border:0;
+      padding:0;
+      background:transparent;
+      color:inherit;
+      text-align:left;
+    }
+    .cover{
+      width:100%;
+      aspect-ratio:4/5;
+      object-fit:cover;
+      background:var(--panel2);
+    }
+    .placeholder{
+      width:100%;
+      aspect-ratio:4/5;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#31232a,#17171c);
+      color:#e7b5c0;
+      font-size:54px;
+    }
+    .card-body{padding:14px}
+    .name{font-size:20px;margin:0 0 6px}
+    .short{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+    .card-actions{padding:0 14px 14px}
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:700;
+      color:#fff;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+    }
+    .btn.secondary{
+      background:var(--panel2);
+      border:1px solid var(--line);
     }
 
-    header {
-      text-align: center;
-      padding: 28px 18px 20px;
+    .profile{
+      position:fixed;
+      inset:0;
+      z-index:50;
+      background:var(--bg);
+      overflow:auto;
+    }
+    .profile-top{
+      position:sticky;
+      top:0;
+      z-index:5;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px 16px;
+      background:rgba(15,15,18,.96);
+      border-bottom:1px solid var(--line);
+    }
+    .back{
+      border:1px solid var(--line);
+      background:var(--panel);
+      color:#fff;
+      border-radius:10px;
+      padding:9px 12px;
+    }
+    .profile-wrap{
+      max-width:960px;
+      margin:0 auto;
+      padding:18px 16px 48px;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:220px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+    .hero img,.hero .placeholder{
+      border-radius:18px;
+      aspect-ratio:4/5;
+      object-fit:cover;
+    }
+    .profile-name{font-size:30px;margin:4px 0 8px}
+    .bio{color:var(--muted);line-height:1.6}
+    .profile-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+    .section-title{margin:28px 0 14px;font-size:21px}
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+    .media{
+      aspect-ratio:1/1;
+      border-radius:12px;
+      overflow:hidden;
+      background:var(--panel2);
+      border:1px solid var(--line);
+    }
+    .media img,.media video{
+      width:100%;height:100%;object-fit:cover;
+    }
+    .empty-media{
+      width:100%;height:100%;
+      display:grid;place-items:center;
+      color:#777;font-size:28px;
+    }
+    footer{
+      text-align:center;
+      padding:24px 16px 40px;
+      color:var(--muted);
+      font-size:13px;
     }
 
-    .logo {
-      width: 110px;
-      height: 110px;
-      margin: auto;
-      border-radius: 50%;
-      border: 3px solid #ff3ca6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #120811;
-      box-shadow: 0 0 28px rgba(255, 60, 166, 0.6);
-      font-size: 42px;
+    .age-gate{
+      position:fixed;inset:0;z-index:100;
+      display:grid;place-items:center;
+      background:rgba(0,0,0,.94);
+      padding:20px;
     }
-
-    h1 {
-      margin: 16px 0 6px;
-      font-size: 28px;
+    .age-card{
+      width:min(430px,100%);
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:24px;
+      text-align:center;
     }
+    .age-card h2{margin-top:0}
+    .age-actions{display:grid;gap:10px;margin-top:18px}
 
-    .subtitle {
-      margin: 0;
-      color: #f3bfdc;
-      font-size: 15px;
-    }
-
-    .search-box {
-      margin: 8px 16px 22px;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #7b315e;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      font-size: 16px;
-      outline: none;
-    }
-
-    .search-box input::placeholder {
-      color: #c998b5;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      padding: 0 16px 30px;
-    }
-
-    .card {
-      overflow: hidden;
-      border-radius: 20px;
-      background: #21101d;
-      border: 1px solid #63304f;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    .photo {
-      width: 100%;
-      aspect-ratio: 4 / 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        linear-gradient(145deg, #81205e, #321029);
-      font-size: 54px;
-    }
-
-    .info {
-      padding: 13px;
-    }
-
-    .name {
-      margin: 0 0 5px;
-      font-size: 18px;
-    }
-
-    .description {
-      min-height: 36px;
-      margin: 0 0 12px;
-      color: #d6aec6;
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .button {
-      display: block;
-      width: 100%;
-      padding: 11px 8px;
-      border: 0;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #ff278e, #d718e7);
-      color: white;
-      text-align: center;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    footer {
-      padding: 5px 20px 30px;
-      text-align: center;
-      color: #ba8aa9;
-      font-size: 12px;
-    }
-
-    @media (min-width: 700px) {
-      .grid {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 900px;
-        margin: auto;
-      }
+    @media(max-width:680px){
+      .hero{grid-template-columns:110px 1fr;gap:14px}
+      .profile-name{font-size:24px}
+      .profile-actions{grid-template-columns:1fr}
+      .gallery{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="logo">💋</div>
-
-    <h1>Lo Mejor de Todo</h1>
-
-    <p class="subtitle">
-      Descubre creadoras y comunícate directamente por Telegram
-    </p>
-  </header>
-
-  <div class="search-box">
-    <input
-      id="search"
-      type="search"
-      placeholder="Buscar una creadora..."
-      autocomplete="off"
-    >
+  <div id="ageGate" class="age-gate">
+    <div class="age-card">
+      <h2>Contenido para mayores de 18 años</h2>
+      <p class="bio">Al continuar confirmas que eres mayor de edad y aceptas ver perfiles publicados con autorización.</p>
+      <div class="age-actions">
+        <button id="enterBtn" class="btn" type="button">Soy mayor de 18 años</button>
+        <button id="leaveBtn" class="btn secondary" type="button">Salir</button>
+      </div>
+    </div>
   </div>
 
-  <main class="grid" id="profiles"></main>
+  <header>
+    <div class="brand">
+      <div class="brand-mark">💋</div>
+      <div>
+        <h1>Lo Mejor de Todo</h1>
+        <p class="subtitle">Perfiles y contacto directo por Telegram</p>
+      </div>
+    </div>
+  </header>
 
-  <footer>
-    Solo perfiles de personas adultas que hayan autorizado su publicación.
-  </footer>
+  <main id="homeView">
+    <div class="toolbar">
+      <input id="search" class="search" type="search" placeholder="Buscar una creadora..." autocomplete="off">
+    </div>
+    <section id="profilesGrid" class="grid"></section>
+  </main>
+
+  <section id="profileView" class="profile hidden" aria-live="polite">
+    <div class="profile-top">
+      <button id="backBtn" class="back" type="button">← Volver</button>
+      <strong id="topName">Perfil</strong>
+    </div>
+    <div class="profile-wrap">
+      <div class="hero">
+        <div id="heroImage"></div>
+        <div>
+          <h2 id="profileName" class="profile-name"></h2>
+          <p id="profileBio" class="bio"></p>
+          <div class="profile-actions">
+            <button id="buyBtn" class="btn" type="button">Comprar contenido</button>
+            <button id="chatBtn" class="btn secondary" type="button">Escribir por Telegram</button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-title">Publicaciones</h3>
+      <div id="gallery" class="gallery"></div>
+    </div>
+  </section>
+
+  <footer>Solo perfiles de personas adultas que hayan autorizado su publicación.</footer>
 
   <script>
     const telegram = window.Telegram?.WebApp;
-
     if (telegram) {
       telegram.ready();
       telegram.expand();
     }
 
+    /*
+      PARA EDITAR UNA CHICA:
+      - name: nombre visible
+      - username: usuario de Telegram SIN @
+      - image: nombre exacto de la foto principal subida a GitHub
+      - description: descripción corta de la tarjeta
+      - bio: descripción completa dentro del perfil
+      - posts: lista de fotos o videos. Puedes añadir hasta 30 o más.
+        Foto:  { type: "image", src: "nombre.jpeg" }
+        Video: { type: "video", src: "nombre.mp4" }
+    */
     const creators = [
       {
-  name: "Valeria Castañeda",
-  username: "valeriapremium",
-  image: "photo_2026-08-01 16.47.50.jpeg",
-  description: "Perfil exclusivo y atención directa por Telegram."
-},
+        id: 1,
+        name: "Valeria Castañeda",
+        username: "valeriapremium",
+        image: "photo_2026-08-01 16.47.50.jpeg",
+        description: "Perfil exclusivo y atención directa por Telegram.",
+        bio: "Aquí puedes escribir la descripción completa de Valeria.",
+        posts: [
+          { type: "image", src: "photo_2026-08-01 16.47.50.jpeg" }
+        ]
+      },
       {
-        name: "𝗟𝗮 𝗚𝗼𝗰𝗵𝗶𝘁𝗮 🧁",
+        id: 2,
+        name: "La Bochita",
         username: "lagochitahot1",
         image: "photo_2026-08-01 18.53.24.jpeg",
-        description: "Conoce su perfil y escríbele directamente."
+        description: "Conoce su perfil y escríbele directamente.",
+        bio: "Aquí puedes escribir la descripción completa de La Bochita.",
+        posts: []
       },
-      {
-        name: "Chica 3",
-        username: "usuario3",
-        emoji: "🌹",
-        description: "Contenido personal y contacto por Telegram."
-      },
-      {
-        name: "Chica 4",
-        username: "usuario4",
-        emoji: "🔥",
-        description: "Descubre sus publicaciones y novedades."
-      },
-      {
-        name: "Chica 5",
-        username: "usuario5",
-        emoji: "✨",
-        description: "Perfil destacado de Lo Mejor de Todo."
-      },
-      {
-        name: "Chica 6",
-        username: "usuario6",
-        emoji: "💖",
-        description: "Comunícate con ella de manera directa."
-      },
-      {
-        name: "Chica 7",
-        username: "usuario7",
-        emoji: "👑",
-        description: "Una de nuestras creadoras destacadas."
-      },
-      {
-        name: "Chica 8",
-        username: "usuario8",
-        emoji: "💫",
-        description: "Visita su Telegram para conocerla mejor."
-      },
-      {
-        name: "Chica 9",
-        username: "usuario9",
-        emoji: "🦋",
-        description: "Perfil nuevo dentro de nuestra plataforma."
-      },
-      {
-        name: "Chica 10",
-        username: "usuario10",
-        emoji: "💜",
-        description: "Escríbele directamente desde Telegram."
-      }
+      ...Array.from({ length: 13 }, (_, i) => ({
+        id: i + 3,
+        name: `Chica ${i + 3}`,
+        username: `usuario${i + 3}`,
+        image: "",
+        description: "Perfil disponible próximamente.",
+        bio: "Añade aquí la descripción completa.",
+        posts: []
+      }))
     ];
 
-    const profiles = document.getElementById("profiles");
+    const grid = document.getElementById("profilesGrid");
     const search = document.getElementById("search");
+    const profileView = document.getElementById("profileView");
+    const homeView = document.getElementById("homeView");
+    const heroImage = document.getElementById("heroImage");
+    const profileName = document.getElementById("profileName");
+    const profileBio = document.getElementById("profileBio");
+    const topName = document.getElementById("topName");
+    const gallery = document.getElementById("gallery");
+    const buyBtn = document.getElementById("buyBtn");
+    const chatBtn = document.getElementById("chatBtn");
+
+    let currentCreator = null;
+
+    function safeTelegramUsername(username) {
+      return String(username || "").replace("@", "").trim();
+    }
 
     function openTelegram(username) {
-      const cleanUsername = username.replace("@", "");
-      const link = `https://t.me/${cleanUsername}`;
-
+      const clean = safeTelegramUsername(username);
+      if (!clean) return;
+      const link = `https://t.me/${clean}`;
       if (telegram?.openTelegramLink) {
         telegram.openTelegramLink(link);
       } else {
@@ -260,46 +362,127 @@
       }
     }
 
-    function showCreators(list) {
-      profiles.innerHTML = "";
+    function imageOrPlaceholder(creator, className = "") {
+      if (creator.image) {
+        const img = document.createElement("img");
+        img.src = creator.image;
+        img.alt = `Foto de ${creator.name}`;
+        img.className = className;
+        img.loading = "lazy";
+        return img;
+      }
+      const placeholder = document.createElement("div");
+      placeholder.className = `placeholder ${className}`;
+      placeholder.textContent = "💋";
+      return placeholder;
+    }
 
+    function showCreators(list) {
+      grid.innerHTML = "";
       list.forEach((creator) => {
         const card = document.createElement("article");
         card.className = "card";
 
-        card.innerHTML = `
-          <div class="photo">${creator.image ? '<img src="' + creator.image + '" alt="' + creator.name + '" style="width:100%; height:100%; object-fit:cover;">' : creator.emoji}</div>
-          <div class="info">
-            <h2 class="name">${creator.name}</h2>
+        const profileButton = document.createElement("button");
+        profileButton.className = "profile-link";
+        profileButton.type = "button";
+        profileButton.setAttribute("aria-label", `Abrir perfil de ${creator.name}`);
+        profileButton.appendChild(imageOrPlaceholder(creator, "cover"));
 
-            <p class="description">
-              ${creator.description}
-            </p>
-
-            <button class="button" type="button">
-              💬 Escribir por Telegram
-            </button>
-          </div>
+        const body = document.createElement("div");
+        body.className = "card-body";
+        body.innerHTML = `
+          <h2 class="name">${creator.name}</h2>
+          <p class="short">${creator.description}</p>
         `;
+        profileButton.appendChild(body);
+        profileButton.addEventListener("click", () => openProfile(creator));
 
-        card
-          .querySelector(".button")
-          .addEventListener("click", () => {
-            openTelegram(creator.username);
-          });
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+        const chat = document.createElement("button");
+        chat.className = "btn";
+        chat.type = "button";
+        chat.textContent = "Escribir por Telegram";
+        chat.addEventListener("click", () => openTelegram(creator.username));
+        actions.appendChild(chat);
 
-        profiles.appendChild(card);
+        card.appendChild(profileButton);
+        card.appendChild(actions);
+        grid.appendChild(card);
       });
     }
 
+    function renderGallery(posts) {
+      gallery.innerHTML = "";
+      const slots = Math.max(30, posts.length);
+
+      for (let i = 0; i < slots; i++) {
+        const item = document.createElement("div");
+        item.className = "media";
+
+        const post = posts[i];
+        if (!post) {
+          const empty = document.createElement("div");
+          empty.className = "empty-media";
+          empty.textContent = "＋";
+          item.appendChild(empty);
+        } else if (post.type === "video") {
+          const video = document.createElement("video");
+          video.src = post.src;
+          video.controls = true;
+          video.preload = "metadata";
+          item.appendChild(video);
+        } else {
+          const img = document.createElement("img");
+          img.src = post.src;
+          img.alt = `Publicación ${i + 1}`;
+          img.loading = "lazy";
+          item.appendChild(img);
+        }
+
+        gallery.appendChild(item);
+      }
+    }
+
+    function openProfile(creator) {
+      currentCreator = creator;
+      topName.textContent = creator.name;
+      profileName.textContent = creator.name;
+      profileBio.textContent = creator.bio || creator.description;
+      heroImage.innerHTML = "";
+      heroImage.appendChild(imageOrPlaceholder(creator));
+      renderGallery(creator.posts || []);
+      homeView.classList.add("hidden");
+      profileView.classList.remove("hidden");
+      window.scrollTo(0, 0);
+    }
+
+    function closeProfile() {
+      profileView.classList.add("hidden");
+      homeView.classList.remove("hidden");
+      currentCreator = null;
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById("backBtn").addEventListener("click", closeProfile);
+    buyBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
+    chatBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
+
     search.addEventListener("input", () => {
       const text = search.value.toLowerCase().trim();
-
       const results = creators.filter((creator) =>
         creator.name.toLowerCase().includes(text)
       );
-
       showCreators(results);
+    });
+
+    document.getElementById("enterBtn").addEventListener("click", () => {
+      document.getElementById("ageGate").classList.add("hidden");
+    });
+
+    document.getElementById("leaveBtn").addEventListener("click", () => {
+      window.location.href = "https://telegram.org/";
     });
 
     showCreators(creators);
