@@ -332,6 +332,7 @@
         id: 1,
         name: "Valeria Castañeda",
         username: "valeriapremium",
+        channel: "valeriapremium1",
         image: "photo_2026-08-01 16.47.50.jpeg",
         description: "Perfil exclusivo y atención directa por Telegram.",
         bio: "Aquí puedes escribir la descripción completa de Valeria.",
@@ -601,8 +602,15 @@
     document.getElementById("backBtn").addEventListener("click", closeProfile);
     document.getElementById("viewerClose").addEventListener("click", closeViewer);
     buyBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
-    chatBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
+    chatBtn.addEventListener("click", () => {
+  if (!currentCreator || !currentCreator.channel) return;
 
+  const enlaceCanal = currentCreator.channel.startsWith("http")
+    ? currentCreator.channel
+: "https://t.me/" + currentCreator.channel;
+
+  openTelegram(enlaceCanal);
+});
     search.addEventListener("input", () => {
       const text = search.value.toLowerCase().trim();
       const results = creators.filter((creator) =>
