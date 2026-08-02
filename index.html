@@ -197,6 +197,21 @@
       display:grid;place-items:center;
       color:#777;font-size:28px;
     }
+
+    .viewer{position:fixed;inset:0;z-index:100;background:#000;display:flex;flex-direction:column}
+    .viewer-top{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:14px;background:linear-gradient(180deg,rgba(0,0,0,.75),transparent)}
+    .viewer-close{border:0;background:rgba(30,30,35,.9);color:#fff;border-radius:999px;padding:10px 14px}
+    .viewer-title{font-weight:700}
+    .slides{flex:1;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain}
+    .slide{min-height:100vh;position:relative;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;background:#000}
+    .slide img,.slide video{width:100%;height:100vh;object-fit:contain;background:#000}
+    .slide-overlay{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:end;padding:24px 18px 30px;background:linear-gradient(transparent,rgba(0,0,0,.8))}
+    .slide-name{font-weight:700;font-size:20px}
+    .like-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .like-btn{width:58px;height:58px;border-radius:50%;border:0;background:rgba(30,30,35,.9);color:#fff;font-size:30px;display:grid;place-items:center}
+    .like-btn.liked{color:#ff2d55}
+    .like-label{font-size:12px;color:#fff}
+
     footer{
       text-align:center;
       padding:24px 16px 40px;
@@ -222,7 +237,7 @@
     .age-actions{display:grid;gap:10px;margin-top:18px}
 
     @media(max-width:680px){
-      .grid{grid-template-columns:repeat(2,1fr);gap:6px;padding:0 6px}
+      .grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:0 10px}
       .hero{grid-template-columns:110px 1fr;gap:14px}
       .profile-name{font-size:24px}
       .profile-actions{grid-template-columns:1fr}
@@ -282,6 +297,16 @@
     </div>
   </section>
 
+
+  <section id="viewer" class="viewer hidden" aria-live="polite">
+    <div class="viewer-top">
+      <button id="viewerClose" class="viewer-close" type="button">✕ Cerrar</button>
+      <div id="viewerTitle" class="viewer-title"></div>
+      <div style="width:82px"></div>
+    </div>
+    <div id="slides" class="slides"></div>
+  </section>
+
   <footer>Solo perfiles de personas adultas que hayan autorizado su publicación.</footer>
 
   <script>
@@ -311,41 +336,40 @@
         description: "Perfil exclusivo y atención directa por Telegram.",
         bio: "Aquí puedes escribir la descripción completa de Valeria.",
         posts: [
-  
           { type: "image", src: "photo_2026-08-01 16.47.50.jpeg" },
-  { type: "image", src: "valeria00001.jpg" },
-  { type: "image", src: "valeria00002.jpg" },
-  { type: "image", src: "valeria00003.jpg" },
-  { type: "image", src: "valeria00004.jpg" },
-  { type: "image", src: "valeria00005.jpg" },
-  { type: "image", src: "valeria00006.jpg" },
-  { type: "image", src: "valeria00007.jpg" },
-  { type: "image", src: "valeria00008.jpg" },
-  { type: "image", src: "valeria00009.jpg" },
-  { type: "image", src: "valeria00010.jpg" },
-  { type: "image", src: "valeria00011.jpg" },
-  { type: "image", src: "valeria00012.jpg" },
-  { type: "image", src: "valeria00013.jpg" },
-  { type: "image", src: "valeria00014.jpg" },
-  { type: "image", src: "valeria00015.jpg" },
-  { type: "image", src: "valeria00016.jpg" },
-  { type: "image", src: "valeria00017.jpg" },
-  { type: "image", src: "valeria00018.jpg" },
-  { type: "image", src: "valeria00019.jpg" },
-  { type: "image", src: "valeria00020.jpg" },
-  { type: "image", src: "valeria00021.jpg" },
-  { type: "video", src: "valeria00022.mp4" },
-{ type: "video", src: "valeria00023.mp4" },
-{ type: "video", src: "valeria00024.mp4" }
-]
+          { type: "image", src: "valeria00001.jpg" },
+          { type: "image", src: "valeria00002.jpg" },
+          { type: "video", src: "valeria00022.mp4" },
+          { type: "image", src: "valeria00003.jpg" },
+          { type: "image", src: "valeria00004.jpg" },
+          { type: "image", src: "valeria00005.jpg" },
+          { type: "video", src: "valeria00023.mp4" },
+          { type: "image", src: "valeria00006.jpg" },
+          { type: "image", src: "valeria00007.jpg" },
+          { type: "image", src: "valeria00008.jpg" },
+          { type: "image", src: "valeria00009.jpg" },
+          { type: "image", src: "valeria00010.jpg" },
+          { type: "video", src: "valeria00024.mp4" },
+          { type: "image", src: "valeria00011.jpg" },
+          { type: "image", src: "valeria00012.jpg" },
+          { type: "image", src: "valeria00013.jpg" },
+          { type: "image", src: "valeria00014.jpg" },
+          { type: "image", src: "valeria00015.jpg" },
+          { type: "image", src: "valeria00016.jpg" },
+          { type: "image", src: "valeria00017.jpg" },
+          { type: "image", src: "valeria00018.jpg" },
+          { type: "image", src: "valeria00019.jpg" },
+          { type: "image", src: "valeria00020.jpg" },
+          { type: "image", src: "valeria00021.jpg" }
+        ]
       },
       {
         id: 2,
-        name: "La Gochita",
+        name: "La Bochita",
         username: "lagochitahot1",
         image: "photo_2026-08-01 18.53.24.jpeg",
         description: "Conoce su perfil y escríbele directamente.",
-        bio: "Aquí puedes escribir la descripción completa de La Gochita.",
+        bio: "Aquí puedes escribir la descripción completa de La Bochita.",
         posts: []
       },
       ...Array.from({ length: 13 }, (_, i) => ({
@@ -370,6 +394,9 @@
     const gallery = document.getElementById("gallery");
     const buyBtn = document.getElementById("buyBtn");
     const chatBtn = document.getElementById("chatBtn");
+    const viewer = document.getElementById("viewer");
+    const slides = document.getElementById("slides");
+    const viewerTitle = document.getElementById("viewerTitle");
 
     let currentCreator = null;
 
@@ -439,36 +466,116 @@
       });
     }
 
+    function likeKey(creatorId, postIndex) {
+      return `lmdt-like-${creatorId}-${postIndex}`;
+    }
+
+    function isLiked(creatorId, postIndex) {
+      return localStorage.getItem(likeKey(creatorId, postIndex)) === "1";
+    }
+
+    function toggleLike(button, creatorId, postIndex) {
+      const key = likeKey(creatorId, postIndex);
+      const liked = localStorage.getItem(key) === "1";
+      if (liked) {
+        localStorage.removeItem(key);
+        button.classList.remove("liked");
+        button.textContent = "♡";
+      } else {
+        localStorage.setItem(key, "1");
+        button.classList.add("liked");
+        button.textContent = "♥";
+      }
+    }
+
     function renderGallery(posts) {
       gallery.innerHTML = "";
-      const slots = Math.max(30, posts.length);
-
-      for (let i = 0; i < slots; i++) {
+      if (!posts.length) {
         const item = document.createElement("div");
         item.className = "media";
-
-        const post = posts[i];
-        if (!post) {
-          const empty = document.createElement("div");
-          empty.className = "empty-media";
-          empty.textContent = "＋";
-          item.appendChild(empty);
-        } else if (post.type === "video") {
+        item.innerHTML = `<div class="empty-media">＋</div>`;
+        gallery.appendChild(item);
+        return;
+      }
+      posts.forEach((post, index) => {
+        const item = document.createElement("button");
+        item.className = "media";
+        item.type = "button";
+        if (post.type === "video") {
           const video = document.createElement("video");
           video.src = post.src;
-          video.controls = true;
+          video.muted = true;
+          video.playsInline = true;
           video.preload = "metadata";
           item.appendChild(video);
         } else {
           const img = document.createElement("img");
           img.src = post.src;
-          img.alt = `Publicación ${i + 1}`;
+          img.alt = `Publicación ${index + 1}`;
           img.loading = "lazy";
           item.appendChild(img);
         }
-
+        item.addEventListener("click", () => openViewer(index));
         gallery.appendChild(item);
-      }
+      });
+    }
+
+    function openViewer(startIndex) {
+      if (!currentCreator) return;
+      viewerTitle.textContent = currentCreator.name;
+      slides.innerHTML = "";
+      currentCreator.posts.forEach((post, index) => {
+        const slide = document.createElement("article");
+        slide.className = "slide";
+        if (post.type === "video") {
+          const video = document.createElement("video");
+          video.src = post.src;
+          video.controls = true;
+          video.playsInline = true;
+          video.preload = "metadata";
+          slide.appendChild(video);
+        } else {
+          const img = document.createElement("img");
+          img.src = post.src;
+          img.alt = `Publicación ${index + 1}`;
+          slide.appendChild(img);
+        }
+        const overlay = document.createElement("div");
+        overlay.className = "slide-overlay";
+        const name = document.createElement("div");
+        name.className = "slide-name";
+        name.textContent = currentCreator.name;
+        const likeWrap = document.createElement("div");
+        likeWrap.className = "like-wrap";
+        const like = document.createElement("button");
+        like.className = "like-btn";
+        like.type = "button";
+        const liked = isLiked(currentCreator.id, index);
+        like.textContent = liked ? "♥" : "♡";
+        if (liked) like.classList.add("liked");
+        like.addEventListener("click", () => toggleLike(like, currentCreator.id, index));
+        const label = document.createElement("span");
+        label.className = "like-label";
+        label.textContent = "Me gusta";
+        likeWrap.appendChild(like);
+        likeWrap.appendChild(label);
+        overlay.appendChild(name);
+        overlay.appendChild(likeWrap);
+        slide.appendChild(overlay);
+        slides.appendChild(slide);
+      });
+      profileView.classList.add("hidden");
+      viewer.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        const target = slides.children[startIndex];
+        if (target) target.scrollIntoView({ block: "start" });
+      });
+    }
+
+    function closeViewer() {
+      viewer.classList.add("hidden");
+      profileView.classList.remove("hidden");
+      slides.querySelectorAll("video").forEach(v => v.pause());
     }
 
     function openProfile(creator) {
@@ -492,6 +599,7 @@
     }
 
     document.getElementById("backBtn").addEventListener("click", closeProfile);
+    document.getElementById("viewerClose").addEventListener("click", closeViewer);
     buyBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
     chatBtn.addEventListener("click", () => currentCreator && openTelegram(currentCreator.username));
 
