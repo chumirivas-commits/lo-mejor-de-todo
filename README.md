@@ -1,2 +1,2 @@
-# lo-mejor-de-todo
-Mini App oficial de Lo Mejor de Todo
+# lo-mejor-de-todo-canales
+Directorio de canales Lo Mejor de Todo
